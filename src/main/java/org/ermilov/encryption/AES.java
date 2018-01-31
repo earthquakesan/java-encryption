@@ -6,25 +6,14 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 public class AES implements Encryption {
-
-    private byte[] encryptionKey = null;
     private Cipher cipher = null;
     private SecretKey secretKey = null;
-    private KeyGenerator keygen = null;
-    private final static String algorithm = "AES";
-    private final static String algorithmInitString = "AES/ECB/PKCS5PADDING";
 
-    public AES(String encryptionKey) {
-        this.encryptionKey = encryptionKey.getBytes();
+    public AES(String password, String salt) {
+        this.secretKey = KeyGenerator.generateFromPassword(password, salt);
+
         try {
-            keygen = KeyGenerator.getInstance(this.algorithm);
-            keygen.init(128);
-            this.secretKey = keygen.generateKey();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        try {
-            this.cipher = Cipher.getInstance(this.algorithmInitString);
+            this.cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
